@@ -1,5 +1,6 @@
 HAND_ID_LIMITS = (200000000000, 999999999999)
 
+# Offsets for PokerStars 7 (Build: 36820)
 OFFSETS = { 'client' : { 'num_tables' : 0x013A4AC0 },
 
             'table' : { 'base' : ((0x013B28D8, 0x20, 0x04, 0x00, 0x0EA8),
