@@ -66,7 +66,7 @@ class Table():
         seat_states = [ ]
         num_seats = len(seat_states)
         if status_code == -1:
-            return TableState(status_code, button_position, turn_counter, pot, hand_id, cards, seat_states, num_seats)
+            return TableState(self.game_type, status_code, button_position, turn_counter, pot, hand_id, cards, seat_states, num_seats)
         for card_id in range(min(num_cards, 5)):
             value = value_from_bytes(memory_chunk, OFFSETS['table']['card_values'] + 0x08 * card_id)
             suit = value_from_bytes(memory_chunk, OFFSETS['table']['card_suits'] + 0x08 * card_id,
@@ -81,7 +81,7 @@ class Table():
         num_seats = len(seat_states)
         if self.game_type == 1:
             pot /= 100
-        return TableState(status_code, button_position, turn_counter, pot, hand_id, cards, seat_states, num_seats)
+        return TableState(self.game_type, status_code, button_position, turn_counter, pot, hand_id, cards, seat_states, num_seats)
 
     def get_status_code(self, button_position, turn_counter, hand_id):
         # Null
@@ -103,7 +103,7 @@ class Seat():
     def __init__(self, table, seat_id):
         self.table = table
         self.index = seat_id
-        self.info_base = self.table.info_base + OFFSETS['seat']['base'][0] + OFFSETS['seat']['base'][1] * self.index
+        self.info_base = self.table.info_base + OFFSETS['seat']['base'] + OFFSETS['seat']['interval'] * self.index
 
     def get_state(self):
         position = self.index
@@ -129,7 +129,8 @@ class Seat():
 
 
 class TableState():
-    def __init__(self, status_code, button_position, turn_counter, pot, hand_id, cards, seat_states, num_seats):
+    def __init__(self, game_type, status_code, button_position, turn_counter, pot, hand_id, cards, seat_states, num_seats):
+        self.game_type = game_type
         self.status_code = status_code
         self.button_position = button_position
         self.turn_counter = turn_counter
